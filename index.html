@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const hash = window.location.hash.substring(1);
+        let token = new URLSearchParams(hash).get('access_token');
+        
+        const fetchTodos = (token) => {
+            fetch("http://127.0.0.1:8000/api/v1/todos", {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                credentials: 'include'
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("todos", data);
+                //localStorage.setItem('log_data', data)
+            // сохранить токен в localStorage, если нужно
+            });
+        }
+
+        const logout = () => {
+            fetch(
+                'http://127.0.0.1:8000/api/v1/logout', {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    credentials: 'include'
+                }
+            )
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                //localStorage.setItem('log_data', data)
+            // сохранить токен в localStorage, если нужно
+            });
+        }
+
+        if(token/*  && !localStorage.getItem('access') */) {
+            fetch("http://127.0.0.1:8000/api/v1/auth/google/callback/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: 'include',
+                body: JSON.stringify({ access_token: token })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Logged in:", data);
+                /* localStorage.setItem('access', data.access)
+                localStorage.setItem('refresh', data.refresh) */
+                window.history.replaceState(null, null, window.location.pathname);
+                fetchTodos(data.access)
+                //localStorage.setItem('log_data', data)
+            // сохранить токен в localStorage, если нужно
+            });
+        }
+
+        const googleToken = localStorage.getItem('access');
+
+        fetchTodos(googleToken);
+
+    </script>
+    <!-- <script src="https://accounts.google.com/gsi/client" async defer></script> -->
+    <!-- <div id="g_id_onload"
+        data-login-uri=""
+        data-client_id="650327151671-lbcrens8oi4v3ie56cl35u20uhnv1kn9.apps.googleusercontent.com"
+        data-callback="handleCredentialResponse"
+        data-auto_prompt="false"
+    >
+    </div>
+
+    <div class="g_id_signin" data-type="standard"></div> -->
+
+    <!-- <script>
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: '650327151671-lbcrens8oi4v3ie56cl35u20uhnv1kn9.apps.googleusercontent.com',
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById('loginBtn'),
+                {theme: 'outline', size: 'large'}
+            )
+            google.accounts.id.prompt();
+        }
+
+        function handleCredentialResponse(response) {
+            console.log(response);
+            const id_token = response.credential;
+            
+            fetch("http://127.0.0.1:8000/api/v1/auth/google/callback/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ access_token: id_token })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Logged in:", data);
+            // сохранить токен в localStorage, если нужно
+            });
+        }
+    </script> -->
+
+    <a href="https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http://127.0.0.1:5500&prompt=consent&response_type=token&client_id=650327151671-lbcrens8oi4v3ie56cl35u20uhnv1kn9.apps.googleusercontent.com&scope=openid%20email%20profile">
+        Login
+    </a>
+    <button onclick="logout()">
+        Logout
+    </button>
+    <!-- <a href="https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http://127.0.0.1:5500&prompt=consent&response_type=code&client_id=650327151671-lbcrens8oi4v3ie56cl35u20uhnv1kn9.apps.googleusercontent.com&scope=openid%20email%20profile&access_type=offline">
+        Login
+    </a> -->
+</body>
+</html>
