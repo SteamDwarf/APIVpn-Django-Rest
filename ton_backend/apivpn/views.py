@@ -9,6 +9,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from dj_rest_auth.jwt_auth import set_jwt_cookies
+from django.core.mail import send_mail
+from django.http.response import HttpResponse
 
 
 class CustomOAuth2Client(OAuth2Client):
@@ -75,3 +77,14 @@ class CustomRegisterViews(RegisterView):
             del response.data["refresh"]
 
         return response
+
+@api_view(['POST'])
+def test_mail(request):
+    send_mail(
+        'Test subject', 
+        'test message', 
+        'v2app@sandbox2a179e7421dd4c27aa2c6ef623aeeb5b.mailgun.org',
+        ['dmitriy.shazhko@sly.team']
+    )
+
+    return HttpResponse('Mail send')

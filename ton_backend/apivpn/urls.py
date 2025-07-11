@@ -2,7 +2,7 @@ from django.urls import path, include, re_path
 from apivpn.views import TodoView, GoogleLogin, api_root
 from dj_rest_auth.registration.views import VerifyEmailView
 from dj_rest_auth.views import PasswordResetConfirmView
-from apivpn.views import CustomRegisterViews
+from apivpn.views import CustomRegisterViews, test_mail
 
 
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('api/v1/registration/', CustomRegisterViews.as_view(), name='registration'),
     path('api/v1/auth/google/callback/', GoogleLogin.as_view(), name="google_login"),
     path('api/v1/todos', TodoView.as_view()),
+    path('api/v1/mail/', test_mail),
     re_path(r'^api/v1/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
         PasswordResetConfirmView.as_view(),
         name='password_reset_confirm'),

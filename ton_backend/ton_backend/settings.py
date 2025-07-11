@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from allauth.account.app_settings import AppSettings
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,11 +50,11 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "rest_framework",
     "rest_framework.authtoken",
-    "snippets",
     "dj_rest_auth",
     "dj_rest_auth.registration",
     "corsheaders",
-    "apivpn"
+    "apivpn",
+    "anymail",
 ]
 
 SITE_ID = 1
@@ -147,7 +151,17 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY"),
+    "MAILGUN_SENDER_DOMAIN": os.getenv("MAILGUN_SENDER_DOMAIN"),  # без "https://"
+}
+DEFAULT_FROM_EMAIL = f"v2app@{os.getenv('MAILGUN_SENDER_DOMAIN')}"
+SERVER_EMAIL = f"v2app@{os.getenv('MAILGUN_SENDER_DOMAIN')}"
+
+ACCOUNT_ADAPTER = "apivpn.adapters.MailgunTemplateAccountAdapter"
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
