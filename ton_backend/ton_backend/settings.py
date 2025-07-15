@@ -76,7 +76,7 @@ ROOT_URLCONF = "ton_backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "apivpn" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -151,8 +151,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY"),
@@ -173,8 +173,13 @@ REST_AUTH = {
     "JWT_AUTH_COOKIE": "access",  # Name of access token cookie
     "JWT_AUTH_REFRESH_COOKIE": "refresh", # Name of refresh token cookie
     "JWT_AUTH_HTTPONLY": True,  # Makes sure refresh token is sent
-    "OLD_PASSWORD_FIELD_ENABLED": True
+    "OLD_PASSWORD_FIELD_ENABLED": True,
+    #"PASSWORD_RESET_SERIALIZER": "apivpn.serializers.CustomPasswordResetSerializer",
 }
+
+""" REST_AUTH_SERIALIZERS = {
+    "PASSWORD_RESET_SERIALIZER": "apivpn.serializers.CustomPasswordResetSerializer"
+} """
 
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password*"]

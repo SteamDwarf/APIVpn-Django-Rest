@@ -1,9 +1,14 @@
-Здравствуйте, {{ user.get_full_name|default:user.username }}!
+Please confirm your email address
 
-Пожалуйста, перейдите по ссылке ниже, чтобы подтвердить ваш email-адрес:
+Hello {{user_name}} !
 
-{{ activate_url }}
+Thank you for signing up with V2App — your secure and reliable VPN service.
+To activate your account, please confirm your email address by clicking the link below:
 
-Если вы не регистрировались — просто проигнорируйте это письмо.
+{{confirm_url}}
 
-С уважением, команда {{ current_site.name }}
+If you didn’t create this account, you can safely ignore this message.
+
+Best regards,  
+The v2app Team
+
