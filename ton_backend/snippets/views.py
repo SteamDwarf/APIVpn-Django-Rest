@@ -10,6 +10,7 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveMode
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, RetrieveAPIView
 from django.contrib.auth.models import User
 from rest_framework.reverse import reverse
+from django.contrib.auth.models import User
 
 from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer, UserSerializer

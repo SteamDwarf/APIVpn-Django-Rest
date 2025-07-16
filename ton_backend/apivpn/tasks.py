@@ -7,8 +7,6 @@ from django.template.loader import get_template
 
 @shared_task()
 def send_confirmation_mail(to, user_name, activate_url):
-    print(f"[CELERY] Preparing to send email to {to}...")
-
     context = {
         "user_name": user_name,
         "confirm_url": activate_url,
@@ -16,16 +14,16 @@ def send_confirmation_mail(to, user_name, activate_url):
 
     subject = render_to_string("account/email/email_confirmation_subject.txt").strip()
     body = render_to_string("account/email/email_confirmation_message.txt", context)
+    html_body = render_to_string("account/email/email_confirmation_message.html", context)
 
     message = AnymailMessage(
         to=[to],
         subject=subject,
         body=body
     )
+    message.attach_alternative(html_body, "text/html")
 
     message.send()
-
-    print(f"[CELERY] Email sent to {to}")
 
 @shared_task()
 def send_reset_password_email(to, reset_url, user_name):
@@ -36,11 +34,13 @@ def send_reset_password_email(to, reset_url, user_name):
 
     subject = render_to_string("account/email/reset_password_subject.txt").strip()
     body = render_to_string("account/email/reset_password_message.txt", context)
+    html_body = render_to_string("account/email/reset_password_message.html", context)
 
     message = AnymailMessage(
         to=[to],
         subject=subject,
         body=body
     )
+    message.attach_alternative(html_body, "text/html")
 
     message.send()

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Email confirmation</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+        <h2>
+            Please confirm your email address
+        </h2> 
+
+        <p>
+            Hello {{user_name}}!
+        </p>
+        <br />
+        <p>
+            Thank you for signing up with V2App — your secure and reliable VPN service.
+            To activate your account, please confirm your email address by clicking the link below:
+        </p>
+        <br />
+
+        <a href={{confirm_url}}>
+            {{confirm_url}}
+        </a> 
+        <br />
+        
+        <p>
+            If you didn’t create this account, you can safely ignore this message.
+        </p>
+        <br />
+        
+        <p>
+            Best regards,  
+            <br />
+            The v2app Team
+        </p>
+    </body>
+</html>
