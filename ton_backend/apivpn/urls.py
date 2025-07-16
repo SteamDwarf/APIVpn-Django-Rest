@@ -15,9 +15,10 @@ urlpatterns = [
     path('api/v1/auth/google/callback/', GoogleLogin.as_view(), name="google_login"),
     path('api/v1/todos', TodoView.as_view()),
     path('api/v1/mail/', test_mail),
-    path(
-        'api/v1/password/reset/confirm/',
+    re_path(
+        r'^api/v1/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
         PasswordResetConfirmView.as_view(),
+        name='password_reset_confirm'
     ),
 
     path('api/v1/account-confirm-email/',

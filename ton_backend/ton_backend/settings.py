@@ -153,8 +153,8 @@ REST_FRAMEWORK = {
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_UNIQUE_EMAIL = True
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY"),
@@ -176,6 +176,10 @@ REST_AUTH = {
     "JWT_AUTH_REFRESH_COOKIE": "refresh", # Name of refresh token cookie
     "JWT_AUTH_HTTPONLY": True,  # Makes sure refresh token is sent
     "OLD_PASSWORD_FIELD_ENABLED": True,
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'ton_backend.apivpn.serializers.CustomRegisterSerializer'
 }
 
 ACCOUNT_LOGIN_METHODS = {'email'}
