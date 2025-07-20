@@ -66,31 +66,3 @@ class TodoView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
-
-class CustomRegisterViews(RegisterView):
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-
-        # Если в ответе есть токены — перенесём их в cookie
-        if "access" in response.data and "refresh" in response.data:
-            set_jwt_cookies(
-                response,
-                access_token=response.data["access"],
-                refresh_token=response.data["refresh"]
-            )
-            # (опционально) убрать из тела ответа
-            del response.data["access"]
-            del response.data["refresh"]
-
-        return response
-
-@api_view(['POST'])
-def test_mail(request):
-    send_mail(
-        'Test subject', 
-        'test message', 
-        'v2app@sandbox2a179e7421dd4c27aa2c6ef623aeeb5b.mailgun.org',
-        ['dmitriy.shazhko@sly.team']
-    )
-
-    return HttpResponse('Mail send')

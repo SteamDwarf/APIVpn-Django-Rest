@@ -145,7 +145,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'dj_rest_auth.jwt_auth.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
@@ -153,8 +153,8 @@ REST_FRAMEWORK = {
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_UNIQUE_EMAIL = True
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY"),
@@ -172,9 +172,7 @@ SIMPLE_JWT = {
 
 REST_AUTH = {
     "USE_JWT": True,
-    "JWT_AUTH_COOKIE": "access",  # Name of access token cookie
-    "JWT_AUTH_REFRESH_COOKIE": "refresh", # Name of refresh token cookie
-    "JWT_AUTH_HTTPONLY": True,  # Makes sure refresh token is sent
+    "JWT_AUTH_HTTPONLY": False,  # Makes sure refresh token is sent
     "OLD_PASSWORD_FIELD_ENABLED": True,
     'REGISTER_SERIALIZER': 'apivpn.serializers.CustomRegisterSerializer'
 }
