@@ -153,8 +153,8 @@ REST_FRAMEWORK = {
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_UNIQUE_EMAIL = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY"),
@@ -176,15 +176,14 @@ REST_AUTH = {
     "JWT_AUTH_REFRESH_COOKIE": "refresh", # Name of refresh token cookie
     "JWT_AUTH_HTTPONLY": True,  # Makes sure refresh token is sent
     "OLD_PASSWORD_FIELD_ENABLED": True,
+    'REGISTER_SERIALIZER': 'apivpn.serializers.CustomRegisterSerializer'
 }
 
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'ton_backend.apivpn.serializers.CustomRegisterSerializer'
-}
 
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password*"]
-SOCIALACCOUNT_AUTO_SIGNUP = False
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_ADAPTER = "apivpn.adapters.CustomSocialAccountAdapter"
 
 AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",  # обязательно
@@ -195,4 +194,5 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5500",
     "http://localhost:5500",
+    "http://localhost:5173"
 ]

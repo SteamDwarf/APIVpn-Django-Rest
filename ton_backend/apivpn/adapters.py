@@ -1,12 +1,10 @@
 from allauth.account.adapter import DefaultAccountAdapter
-from anymail.message import AnymailMessage
-from django.conf import settings
-from django.template.loader import render_to_string
 from apivpn.tasks import send_confirmation_mail, send_reset_password_email
-from allauth.account.adapter import DefaultAccountAdapter
-from allauth.account.models import EmailAddress
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from allauth.account.utils import user_email
+from django.contrib.auth import get_user_model
+from allauth.exceptions import ImmediateHttpResponse
+from django.http import JsonResponse
 
 class MailgunTemplateAccountAdapter(DefaultAccountAdapter):
     """ def clean_email(self, email):
@@ -17,7 +15,7 @@ class MailgunTemplateAccountAdapter(DefaultAccountAdapter):
     
     def get_email_confirmation_url(self, request, emailconfirmation):
         key = emailconfirmation.key
-        return f"http://127.0.0.1:8000/api/v1/account-confirm-email/{key}/"
+        return f"http://localhost:5173/auth/confirm-email/{key}/"
     
     def send_confirmation_mail(self, request, emailconfirmation, signup):
         # Получаем пользователя
@@ -33,15 +31,28 @@ class MailgunTemplateAccountAdapter(DefaultAccountAdapter):
             context['password_reset_url'],
             context['user'].get_username()
         )
-        # Формируем письмо с использованием Mailgun Template
-        """ message = AnymailMessage(
-            to=[email],
-        )
-        message.template_id = "registration"  # ID шаблона из Mailgun
-        message.merge_data = {
-            email: {
-                "user_name": user.get_username(),
-                "confirm_url": activate_url,
-            }
-        }
-        message.send() """
+
+
+class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
+    def pre_social_login(self, request, sociallogin):
+        email = user_email(sociallogin.user)
+
+        if not email:
+            return
+
+        if sociallogin.is_existing:
+            return
+
+        User = get_user_model()
+
+        try:
+            existing_user = User.objects.get(email=email)
+            sociallogin.connect(request, existing_user)
+
+        except User.DoesNotExist:
+            pass
+
+    def authentication_error(self, request, provider_id, error=None, exception=None, extra_context=None):
+        raise ImmediateHttpResponse(JsonResponse({
+            "error": str(error) if error else "Authentication failed",
+        }, status=400))
